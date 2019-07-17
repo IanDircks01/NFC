@@ -89,5 +89,10 @@ namespace NFC
         {
 
         }
+
+        private void ReadButton_Click(object sender, EventArgs e)
+        {
+            Form2.ActiveForm.Show();
+        }
     }
 }

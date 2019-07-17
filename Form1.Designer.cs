@@ -31,11 +31,12 @@
             this.WriteButton = new System.Windows.Forms.Button();
             this.WriteInputField = new System.Windows.Forms.TextBox();
             this.StatusText = new System.Windows.Forms.Label();
+            this.ReadButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // WriteButton
             // 
-            this.WriteButton.Location = new System.Drawing.Point(241, 247);
+            this.WriteButton.Location = new System.Drawing.Point(16, 102);
             this.WriteButton.Name = "WriteButton";
             this.WriteButton.Size = new System.Drawing.Size(262, 23);
             this.WriteButton.TabIndex = 0;
@@ -45,7 +46,7 @@
             // 
             // WriteInputField
             // 
-            this.WriteInputField.Location = new System.Drawing.Point(241, 221);
+            this.WriteInputField.Location = new System.Drawing.Point(16, 76);
             this.WriteInputField.Name = "WriteInputField";
             this.WriteInputField.Size = new System.Drawing.Size(262, 20);
             this.WriteInputField.TabIndex = 1;
@@ -60,11 +61,22 @@
             this.StatusText.Text = "Status: --loading--";
             this.StatusText.Click += new System.EventHandler(this.Label1_Click);
             // 
+            // ReadButton
+            // 
+            this.ReadButton.Location = new System.Drawing.Point(16, 131);
+            this.ReadButton.Name = "ReadButton";
+            this.ReadButton.Size = new System.Drawing.Size(262, 23);
+            this.ReadButton.TabIndex = 3;
+            this.ReadButton.Text = "Read NFC Tag";
+            this.ReadButton.UseVisualStyleBackColor = true;
+            this.ReadButton.Click += new System.EventHandler(this.ReadButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(296, 183);
+            this.Controls.Add(this.ReadButton);
             this.Controls.Add(this.StatusText);
             this.Controls.Add(this.WriteInputField);
             this.Controls.Add(this.WriteButton);
@@ -81,6 +93,7 @@
         private System.Windows.Forms.Button WriteButton;
         private System.Windows.Forms.TextBox WriteInputField;
         private System.Windows.Forms.Label StatusText;
+        private System.Windows.Forms.Button ReadButton;
     }
 }
 
