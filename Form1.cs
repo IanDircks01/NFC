@@ -72,7 +72,6 @@ namespace NFC
             {
                 // Cancel the Closing event from closing the form.
                 e.Cancel = true;
-                // Call method to save file...
             }
             else
             {
