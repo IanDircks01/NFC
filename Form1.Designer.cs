@@ -28,60 +28,65 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.WriteButton = new System.Windows.Forms.Button();
             this.WriteInputField = new System.Windows.Forms.TextBox();
             this.StatusText = new System.Windows.Forms.Label();
             this.ReadButton = new System.Windows.Forms.Button();
+            this.ReadDataBox = new System.Windows.Forms.TextBox();
+            this.ClearReadButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // WriteButton
             // 
-            this.WriteButton.Location = new System.Drawing.Point(16, 102);
+            resources.ApplyResources(this.WriteButton, "WriteButton");
             this.WriteButton.Name = "WriteButton";
-            this.WriteButton.Size = new System.Drawing.Size(262, 23);
-            this.WriteButton.TabIndex = 0;
-            this.WriteButton.Text = "Write To NFC Tag";
             this.WriteButton.UseVisualStyleBackColor = true;
             this.WriteButton.Click += new System.EventHandler(this.Button1_Click);
             // 
             // WriteInputField
             // 
-            this.WriteInputField.Location = new System.Drawing.Point(16, 76);
+            resources.ApplyResources(this.WriteInputField, "WriteInputField");
             this.WriteInputField.Name = "WriteInputField";
-            this.WriteInputField.Size = new System.Drawing.Size(262, 20);
-            this.WriteInputField.TabIndex = 1;
             // 
             // StatusText
             // 
-            this.StatusText.AutoSize = true;
-            this.StatusText.Location = new System.Drawing.Point(13, 13);
+            resources.ApplyResources(this.StatusText, "StatusText");
             this.StatusText.Name = "StatusText";
-            this.StatusText.Size = new System.Drawing.Size(89, 13);
-            this.StatusText.TabIndex = 2;
-            this.StatusText.Text = "Status: --loading--";
             this.StatusText.Click += new System.EventHandler(this.Label1_Click);
             // 
             // ReadButton
             // 
-            this.ReadButton.Location = new System.Drawing.Point(16, 131);
+            resources.ApplyResources(this.ReadButton, "ReadButton");
             this.ReadButton.Name = "ReadButton";
-            this.ReadButton.Size = new System.Drawing.Size(262, 23);
-            this.ReadButton.TabIndex = 3;
-            this.ReadButton.Text = "Read NFC Tag";
             this.ReadButton.UseVisualStyleBackColor = true;
             this.ReadButton.Click += new System.EventHandler(this.ReadButton_Click);
             // 
+            // ReadDataBox
+            // 
+            resources.ApplyResources(this.ReadDataBox, "ReadDataBox");
+            this.ReadDataBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.ReadDataBox.Name = "ReadDataBox";
+            this.ReadDataBox.TextChanged += new System.EventHandler(this.ReadDataBox_TextChanged);
+            // 
+            // ClearReadButton
+            // 
+            resources.ApplyResources(this.ClearReadButton, "ClearReadButton");
+            this.ClearReadButton.Name = "ClearReadButton";
+            this.ClearReadButton.UseVisualStyleBackColor = true;
+            this.ClearReadButton.Click += new System.EventHandler(this.ClearReadButton_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(296, 183);
+            this.Controls.Add(this.ClearReadButton);
+            this.Controls.Add(this.ReadDataBox);
             this.Controls.Add(this.ReadButton);
             this.Controls.Add(this.StatusText);
             this.Controls.Add(this.WriteInputField);
             this.Controls.Add(this.WriteButton);
             this.Name = "Form1";
-            this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -94,6 +99,8 @@
         private System.Windows.Forms.TextBox WriteInputField;
         private System.Windows.Forms.Label StatusText;
         private System.Windows.Forms.Button ReadButton;
+        private System.Windows.Forms.TextBox ReadDataBox;
+        private System.Windows.Forms.Button ClearReadButton;
     }
 }
 

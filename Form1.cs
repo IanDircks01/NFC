@@ -15,19 +15,26 @@ namespace NFC
     {
         public SerialPort serialPort;
 
+        private string DispString;
+
         public Form1()
         {
             InitializeComponent();
-
-            SetStatus("Initializing");
-            StartComs();
         }
 
-        private void StartComs()
+        private void Form1_Load(object sender, EventArgs e)
         {
-           serialPort = new SerialPort("COM3", 9600, Parity.None, 8, StopBits.One);
+            SetStatus("Initializing");
+            //MessageBox("COM1", "COM2", "")
+            ReadDataBox.Font = new Font("Lucida Sans Unicode", this.Font.Size);
+            StartComs("3");
+        }
+
+        private void StartComs(string com)
+        {
+           serialPort = new SerialPort("COM" + com, 9600, Parity.None, 8, StopBits.One);
            serialPort.ReadTimeout = 5000;
-           serialPort.Open();
+           serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
            SetStatus("Idle");
         }
 
@@ -38,7 +45,7 @@ namespace NFC
 
         public void WriteToNFC(string message)
         {
-            SetStatus("Writing");
+            serialPort.Open();
 
             if(serialPort.IsOpen == false)
             {
@@ -47,10 +54,25 @@ namespace NFC
                 return;
             }
 
-            /// start work here || serialPort.Read
+            SetStatus("Writing");
+
+            SelectCard();
+            Beep();
 
             MakeMessage("Your message was written to the NFC card.", "Success");
             SetStatus("Idle");
+        }
+
+        private void serialPort_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            DispString = serialPort.ReadExisting();
+            this.Invoke(new EventHandler(DisplayText));
+            serialPort.Close();
+        }
+
+        private void DisplayText(object sender, EventArgs e)
+        {
+            ReadDataBox.AppendText(DispString);
         }
 
         public void SetStatus(string status)
@@ -63,6 +85,21 @@ namespace NFC
             string message = MainText;
             string title = TitleText;
             MessageBox.Show(message, title);
+        }
+
+        public void SelectCard()
+        {
+            serialPort.Write(new byte[] { 0x02, 0x04, 0x06}, 0, 3);
+        }
+
+        public void Beep()
+        {
+            serialPort.Write(new byte[] { 0x02, 0x13, 0x15 }, 0, 3);
+        }
+
+        private void ReadButton_Click(object sender, EventArgs e)
+        {
+            //read data
         }
 
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -80,19 +117,21 @@ namespace NFC
             }
         }
 
+        private void ClearReadButton_Click(object sender, EventArgs e)
+        {
+            ReadDataBox.Text = "";
+        }
+
+
+
         private void Label1_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void ReadDataBox_TextChanged(object sender, EventArgs e)
         {
 
-        }
-
-        private void ReadButton_Click(object sender, EventArgs e)
-        {
-            Form2.ActiveForm.Show();
         }
     }
 }
