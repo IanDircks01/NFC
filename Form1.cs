@@ -29,18 +29,66 @@ namespace NFC
         private void Form1_Load(object sender, EventArgs e)
         {
             SetStatus("Initializing");
+            ReadDataBox.Font = new Font("Lucida Sans Unicode", this.Font.Size);
+            if (ports.Length == 1)
+            {
+                ComTextBox.Text = ports[0];
+            } else if(ports.Length == 0)
+            {
+                MakeMessage("Ther are no com ports please plug in the NFC scanner, now closing...", "Com Error");
+                Application.Exit();
+            }
+            else
+            {
+                IdentifyPorts();
+            }
+        }
+
+        private void IdentifyPorts()
+        {
+            p = "";
+
             foreach (string port in ports)
             {
                 string op;
                 op = p;
-                p = op + " | " + port;
+                if (op == "")
+                {
+                    p = port;
+                }
+                else
+                {
+                    p = op + " | " + port;
+                }
             }
             MakeMessage(p, "Ports");
-            ReadDataBox.Font = new Font("Lucida Sans Unicode", this.Font.Size);
+        }
+
+        public bool PortCheck()
+        {
+            bool IsOption = false;
+
+            foreach(string port in ports)
+            {
+                string po = port.ToLower();
+                string ppo = ComTextBox.Text.ToLower();
+                if (po == ppo)
+                {
+                    IsOption = true;
+                }
+            }
+
+            return IsOption;
         }
 
         private void StartComs(string com)
         {
+            if (PortCheck() != true)
+            {
+                MakeMessage("Please choose another port", "Com Error");
+                return;
+            }
+
            serialPort = new SerialPort(com.Normalize(), 9600, Parity.None, 8, StopBits.One);
            serialPort.ReadTimeout = 5000;
            serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
@@ -62,7 +110,13 @@ namespace NFC
 
         public void WriteToNFC(string message)
         {
-            if(ComTextBox.Text == "")
+            if (PortCheck() != true)
+            {
+                MakeMessage("Please choose another port", "Com Error");
+                return;
+            }
+
+            if (ComTextBox.Text == "")
             {
                 MakeMessage("Please enter a com port for the NFC Scanner", "Com Error");
                 return;
@@ -112,6 +166,11 @@ namespace NFC
             MessageBox.Show(message, title);
         }
 
+        public void Anticollision()
+        {
+            serialPort.Write(new byte[] { 0x02, 0x03, 0x05 }, 0, 3);
+        }
+
         public void SelectCard()
         {
             serialPort.Write(new byte[] { 0x02, 0x04, 0x06}, 0, 3);
@@ -147,6 +206,10 @@ namespace NFC
             ReadDataBox.Text = "";
         }
 
+        private void ListComs_Click(object sender, EventArgs e)
+        {
+            IdentifyPorts();
+        }
 
 
         private void Label1_Click(object sender, EventArgs e)
@@ -163,5 +226,6 @@ namespace NFC
         {
 
         }
+
     }
 }

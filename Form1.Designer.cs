@@ -37,6 +37,7 @@
             this.ClearReadButton = new System.Windows.Forms.Button();
             this.ComTextBox = new System.Windows.Forms.TextBox();
             this.ComChoiseText = new System.Windows.Forms.Label();
+            this.ListComs = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // WriteButton
@@ -89,10 +90,18 @@
             this.ComChoiseText.Name = "ComChoiseText";
             this.ComChoiseText.Click += new System.EventHandler(this.Label1_Click_1);
             // 
+            // ListComs
+            // 
+            resources.ApplyResources(this.ListComs, "ListComs");
+            this.ListComs.Name = "ListComs";
+            this.ListComs.UseVisualStyleBackColor = true;
+            this.ListComs.Click += new System.EventHandler(this.ListComs_Click);
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ListComs);
             this.Controls.Add(this.ComChoiseText);
             this.Controls.Add(this.ComTextBox);
             this.Controls.Add(this.ClearReadButton);
@@ -118,6 +127,7 @@
         private System.Windows.Forms.Button ClearReadButton;
         private System.Windows.Forms.TextBox ComTextBox;
         private System.Windows.Forms.Label ComChoiseText;
+        private System.Windows.Forms.Button ListComs;
     }
 }
 
