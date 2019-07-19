@@ -70,6 +70,7 @@
             this.ReadDataBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
             resources.ApplyResources(this.ReadDataBox, "ReadDataBox");
             this.ReadDataBox.Name = "ReadDataBox";
+            this.ReadDataBox.ReadOnly = true;
             this.ReadDataBox.TextChanged += new System.EventHandler(this.ReadDataBox_TextChanged);
             // 
             // ClearReadButton

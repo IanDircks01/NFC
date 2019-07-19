@@ -145,6 +145,7 @@ namespace NFC
         private void serialPort_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             DispString = serialPort.ReadExisting();
+            DispString = DispString.Normalize();
             this.Invoke(new EventHandler(DisplayText));
             serialPort.Close();
         }
