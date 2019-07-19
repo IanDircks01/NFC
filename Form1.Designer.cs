@@ -35,6 +35,8 @@
             this.ReadButton = new System.Windows.Forms.Button();
             this.ReadDataBox = new System.Windows.Forms.TextBox();
             this.ClearReadButton = new System.Windows.Forms.Button();
+            this.ComTextBox = new System.Windows.Forms.TextBox();
+            this.ComChoiseText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // WriteButton
@@ -64,8 +66,8 @@
             // 
             // ReadDataBox
             // 
-            resources.ApplyResources(this.ReadDataBox, "ReadDataBox");
             this.ReadDataBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            resources.ApplyResources(this.ReadDataBox, "ReadDataBox");
             this.ReadDataBox.Name = "ReadDataBox";
             this.ReadDataBox.TextChanged += new System.EventHandler(this.ReadDataBox_TextChanged);
             // 
@@ -76,10 +78,23 @@
             this.ClearReadButton.UseVisualStyleBackColor = true;
             this.ClearReadButton.Click += new System.EventHandler(this.ClearReadButton_Click);
             // 
+            // ComTextBox
+            // 
+            resources.ApplyResources(this.ComTextBox, "ComTextBox");
+            this.ComTextBox.Name = "ComTextBox";
+            // 
+            // ComChoiseText
+            // 
+            resources.ApplyResources(this.ComChoiseText, "ComChoiseText");
+            this.ComChoiseText.Name = "ComChoiseText";
+            this.ComChoiseText.Click += new System.EventHandler(this.Label1_Click_1);
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ComChoiseText);
+            this.Controls.Add(this.ComTextBox);
             this.Controls.Add(this.ClearReadButton);
             this.Controls.Add(this.ReadDataBox);
             this.Controls.Add(this.ReadButton);
@@ -101,6 +116,8 @@
         private System.Windows.Forms.Button ReadButton;
         private System.Windows.Forms.TextBox ReadDataBox;
         private System.Windows.Forms.Button ClearReadButton;
+        private System.Windows.Forms.TextBox ComTextBox;
+        private System.Windows.Forms.Label ComChoiseText;
     }
 }
 

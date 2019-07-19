@@ -17,6 +17,10 @@ namespace NFC
 
         private string DispString;
 
+        public string[] ports = SerialPort.GetPortNames();
+
+        private string p;
+
         public Form1()
         {
             InitializeComponent();
@@ -25,17 +29,30 @@ namespace NFC
         private void Form1_Load(object sender, EventArgs e)
         {
             SetStatus("Initializing");
-            //MessageBox("COM1", "COM2", "")
+            foreach (string port in ports)
+            {
+                string op;
+                op = p;
+                p = op + " | " + port;
+            }
+            MakeMessage(p, "Ports");
             ReadDataBox.Font = new Font("Lucida Sans Unicode", this.Font.Size);
-            StartComs("3");
         }
 
         private void StartComs(string com)
         {
-           serialPort = new SerialPort("COM" + com, 9600, Parity.None, 8, StopBits.One);
+           serialPort = new SerialPort(com.Normalize(), 9600, Parity.None, 8, StopBits.One);
            serialPort.ReadTimeout = 5000;
            serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
-           SetStatus("Idle");
+           serialPort.Open();
+           if (serialPort.IsOpen == true)
+            {
+                SetStatus("Idle");
+            }
+            else
+            {
+                SetStatus("Com Error!");
+            }
         }
 
         private void Button1_Click(object sender, EventArgs e)
@@ -45,7 +62,15 @@ namespace NFC
 
         public void WriteToNFC(string message)
         {
-            serialPort.Open();
+            if(ComTextBox.Text == "")
+            {
+                MakeMessage("Please enter a com port for the NFC Scanner", "Com Error");
+                return;
+            }
+            else
+            {
+                StartComs(ComTextBox.Text);
+            }
 
             if(serialPort.IsOpen == false)
             {
@@ -130,6 +155,11 @@ namespace NFC
         }
 
         private void ReadDataBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Label1_Click_1(object sender, EventArgs e)
         {
 
         }
