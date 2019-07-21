@@ -9,6 +9,7 @@ def beep():
     buffer = bytearray([0x02,0x13,0x15])
     print(buffer)
     ser.write(buffer)
+    print(ser.read(size=len(buffer)))
     ser.close()
 
 while True:
