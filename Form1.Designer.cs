@@ -38,6 +38,10 @@
             this.ComTextBox = new System.Windows.Forms.TextBox();
             this.ComChoiseText = new System.Windows.Forms.Label();
             this.ListComs = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.SectorText = new System.Windows.Forms.TextBox();
+            this.BlockText = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // WriteButton
@@ -51,6 +55,7 @@
             // 
             resources.ApplyResources(this.WriteInputField, "WriteInputField");
             this.WriteInputField.Name = "WriteInputField";
+            this.WriteInputField.TextChanged += new System.EventHandler(this.WriteInputField_TextChanged);
             // 
             // StatusText
             // 
@@ -98,10 +103,35 @@
             this.ListComs.UseVisualStyleBackColor = true;
             this.ListComs.Click += new System.EventHandler(this.ListComs_Click);
             // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.Name = "label2";
+            this.label2.Click += new System.EventHandler(this.Label2_Click);
+            // 
+            // SectorText
+            // 
+            resources.ApplyResources(this.SectorText, "SectorText");
+            this.SectorText.Name = "SectorText";
+            // 
+            // BlockText
+            // 
+            resources.ApplyResources(this.BlockText, "BlockText");
+            this.BlockText.Name = "BlockText";
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.BlockText);
+            this.Controls.Add(this.SectorText);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.ListComs);
             this.Controls.Add(this.ComChoiseText);
             this.Controls.Add(this.ComTextBox);
@@ -129,6 +159,10 @@
         private System.Windows.Forms.TextBox ComTextBox;
         private System.Windows.Forms.Label ComChoiseText;
         private System.Windows.Forms.Button ListComs;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox SectorText;
+        private System.Windows.Forms.TextBox BlockText;
     }
 }
 

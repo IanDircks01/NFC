@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
+using System.IO;
+using System.Threading;
+using System.Diagnostics;
 
 namespace NFC
 {
@@ -33,7 +36,7 @@ namespace NFC
             if (ports.Length == 1)
             {
                 ComTextBox.Text = ports[0];
-            } else if(ports.Length == 0)
+            } else if (ports.Length == 0)
             {
                 MakeMessage("Ther are no com ports please plug in the NFC scanner, now closing...", "Com Error");
                 Application.Exit();
@@ -42,6 +45,8 @@ namespace NFC
             {
                 IdentifyPorts();
             }
+
+            ReadDataBox.Text = "NFC Reader/Writer ready for use!";
         }
 
         private void IdentifyPorts()
@@ -68,7 +73,7 @@ namespace NFC
         {
             bool IsOption = false;
 
-            foreach(string port in ports)
+            foreach (string port in ports)
             {
                 string po = port.ToLower();
                 string ppo = ComTextBox.Text.ToLower();
@@ -89,11 +94,11 @@ namespace NFC
                 return;
             }
 
-           serialPort = new SerialPort(com.Normalize(), 9600, Parity.None, 8, StopBits.One);
-           serialPort.ReadTimeout = 5000;
-           serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
-           serialPort.Open();
-           if (serialPort.IsOpen == true)
+            serialPort = new SerialPort(com.Normalize(), 9600, Parity.None, 8, StopBits.One);
+            serialPort.ReadTimeout = 5000;
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
+            serialPort.Open();
+            if (serialPort.IsOpen == true)
             {
                 SetStatus("Idle");
             }
@@ -126,7 +131,7 @@ namespace NFC
                 StartComs(ComTextBox.Text);
             }
 
-            if(serialPort.IsOpen == false)
+            if (serialPort.IsOpen == false)
             {
                 SetStatus("Error");
                 MakeMessage("There was an issue with the communication to the port. Port not open or there was an error during an operation. please restart this application and try again.", "ERROR");
@@ -135,24 +140,33 @@ namespace NFC
 
             SetStatus("Writing");
 
-            SelectCard();
-            Beep();
+            byte[] data = Encoding.ASCII.GetBytes(WriteInputField.Text);
+            Debug.WriteLine(data);
+            serialPort.Write(data, 0, data.Length);
 
+            //Beep();
             MakeMessage("Your message was written to the NFC card.", "Success");
             SetStatus("Idle");
         }
 
         private void serialPort_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
-            DispString = serialPort.ReadExisting();
-            DispString = DispString.Normalize();
+            //DispString = serialPort.ReadExisting();
+            //this.Invoke(new EventHandler(DisplayText));
+            int length = serialPort.BytesToRead;
+            byte[] buf = new byte[length];
+
+            serialPort.Read(buf, 0, length);
+            System.Diagnostics.Debug.WriteLine("Received Data:" + buf);
+
+            DispString = System.Text.Encoding.Default.GetString(buf, 0, buf.Length);
             this.Invoke(new EventHandler(DisplayText));
             serialPort.Close();
         }
 
         private void DisplayText(object sender, EventArgs e)
         {
-            ReadDataBox.AppendText(DispString);
+            ReadDataBox.AppendText("\n" + DispString);
         }
 
         public void SetStatus(string status)
@@ -174,7 +188,7 @@ namespace NFC
 
         public void SelectCard()
         {
-            serialPort.Write(new byte[] { 0x02, 0x04, 0x06}, 0, 3);
+            serialPort.Write(new byte[] { 0x02, 0x04, 0x06 }, 0, 3);
         }
 
         public void Beep()
@@ -184,7 +198,41 @@ namespace NFC
 
         private void ReadButton_Click(object sender, EventArgs e)
         {
-            //read data
+            if (SectorText.Text == "" || BlockText.Text == "")
+            {
+                MakeMessage("Please enter a sector and block to look at.", "Read Error");
+                return;
+            }
+
+            if (PortCheck() != true)
+            {
+                MakeMessage("Please choose another port", "Com Error");
+                return;
+            }
+
+            if (ComTextBox.Text == "")
+            {
+                MakeMessage("Please enter a com port for the NFC Scanner", "Com Error");
+                return;
+            }
+            else
+            {
+                StartComs(ComTextBox.Text);
+            }
+
+            if (serialPort.IsOpen == false)
+            {
+                SetStatus("Error");
+                MakeMessage("There was an issue with the communication to the port. Port not open or there was an error during an operation. please restart this application and try again.", "ERROR");
+                return;
+            }
+
+            SetStatus("Reading");
+
+            //serialPort.Write(new byte[] { 0x03, 0x06, 0x00, 0x09 }, 0, 4);
+
+            MakeMessage("Data read successfully.", "Success");
+            SetStatus("Idle");
         }
 
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -200,6 +248,15 @@ namespace NFC
                 serialPort.Close();
                 MakeMessage("You are now closing the application. Shutting down coms.", "Closing");
             }
+        }
+
+        public bool DoesCardExcist()
+        {
+            bool Excistance = false;
+
+            //work here
+
+            return Excistance;
         }
 
         private void ClearReadButton_Click(object sender, EventArgs e)
@@ -228,5 +285,14 @@ namespace NFC
 
         }
 
+        private void WriteInputField_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
