@@ -1,3 +1,5 @@
+#This copy is being depreciated. Please use NFC2.py for new updates
+
 import serial
 import io
 import time
