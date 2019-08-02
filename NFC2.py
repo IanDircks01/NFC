@@ -1,3 +1,5 @@
+#Update this to prevent code from auto converting certain hex to ascii (example is serial numer/anticollision)
+
 import serial
 import io
 import time
@@ -38,7 +40,7 @@ def anticollision():
     ser.write(NFCProt["anticollision"])
     time.sleep(0.25)
     resp = ser.read(8)
-    print(resp)
+    print(resp) #Restrict this line to read back only Serial Number
     beep()
     ser.close()
 
