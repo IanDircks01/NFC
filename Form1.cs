@@ -97,7 +97,11 @@ namespace NFC
             serialPort = new SerialPort(com.Normalize(), 9600, Parity.None, 8, StopBits.One);
             serialPort.ReadTimeout = 5000;
             serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
-            serialPort.Open();
+            if (serialPort.IsOpen == false)
+            {
+                serialPort.Open();
+            }
+
             if (serialPort.IsOpen == true)
             {
                 SetStatus("Idle");
@@ -145,6 +149,8 @@ namespace NFC
             serialPort.Write(data, 0, data.Length);
 
             //Beep();
+
+            serialPort.Close();
             MakeMessage("Your message was written to the NFC card.", "Success");
             SetStatus("Idle");
         }
@@ -254,14 +260,24 @@ namespace NFC
         {
             bool Excistance = false;
 
-            //work here
+            serialPort.Write(new byte[] { 0x03, 0x02, 0x00, 0x05 }, 0, 4);
+
+            //if ("")
 
             return Excistance;
         }
 
         private void ClearReadButton_Click(object sender, EventArgs e)
         {
-            ReadDataBox.Text = "";
+            DialogResult dialogResult = MessageBox.Show("Are you sure you would like to clear the read data bay.", "Clear?", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                ReadDataBox.Text = "";
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                return;
+            }
         }
 
         private void ListComs_Click(object sender, EventArgs e)
