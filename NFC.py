@@ -17,8 +17,25 @@ NFCProt = {
     "manufacture-data": b'\x0A\x05\x00\x03\xFF\xFF\xFF\xFF\xFF\xFF\x0C'
 }
 
-currentDevice = 'COM4'
+currentDevice = None
+connectedDevices = []
 beepEnabled = 1
+
+def startCode():
+    print("WARNING: Not all data shown in console is accurate due to python and pyserial automatically converting some hex data")
+    listDevice()
+    if len(connectedDevices) > 0:
+        print("Devices found!")
+        print("Connected devices: " + str(connectedDevices))
+        setDevice(connectedDevices[0])
+    else:
+        print("No devices found!")
+
+def listDevice():
+    global connectedDevices
+    comlist = serial.tools.list_ports.comports()
+    for element in comlist:
+        connectedDevices.append(element.device)
 
 def setDevice(device):
     global currentDevice
@@ -35,7 +52,7 @@ def beepControl():
         beepEnabled = 0
         print("NFC Speaker disabled")
     elif beepEnabled == 0:
-        beepEnabled =1
+        beepEnabled = 1
         print("NFC Speaker enabled")
 
 def beep():
@@ -46,7 +63,7 @@ def beep():
 def beeptest():
     if beepEnabled == 0:
         print("NFC Speaker beeps are disabled!")
-    elif beepEnabled ==1:
+    elif beepEnabled == 1:
         serialOpen()
         ser.write(NFCProt["beep"])
         print("Beep!")
@@ -134,8 +151,7 @@ def writesector(sector=None,block=None,hexinput=None):
     #Rewrite this function to work properly. Use readsector() as a base
 
 #Console CMD Runner
-print("WARNING: Not all data shown in console is accurate due to python and pyserial automatically converting some hex data")
-print("Default Device is set to COM4. Change this if necessary")
+startCode()
 while True:
     command = input("Command:")
     if command == "setdevice":
