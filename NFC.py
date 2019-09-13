@@ -4,7 +4,7 @@ import serial
 from serial.tools import list_ports
 import io
 import time
-import CardSectors
+import CardSectorData
 
 ser = serial.Serial()
 
@@ -14,11 +14,14 @@ NFCProt = {
     "card-check": b'\x03\x02\x00\x05',
     "card-found": b'\x03\x02\x01\x06',
     "no-card-found": b'\x02\x01\x03',
-    "manufacture-data": b'\x0A\x05\x00\x03\xFF\xFF\xFF\xFF\xFF\xFF\x0C'
+    "manufacture-data": b'\x0A\x05\x00\x03\xFF\xFF\xFF\xFF\xFF\xFF\x0C',
+    #Starter has no known listing in the protocol. Will write proper name when ready
+    "starter": b'\x03\x0A\x00\x0D'
 }
 
 currentDevice = None
 connectedDevices = []
+currentNFCKey = b'\xFF\xFF\xFF\xFF\xFF\xFF'
 beepEnabled = 1
 
 def startCode():
@@ -28,6 +31,7 @@ def startCode():
         print("Devices found!")
         print("Connected devices: " + str(connectedDevices))
         setDevice(connectedDevices[0])
+        print("Using device: %s" % currentDevice)
     else:
         print("No devices found!")
 
@@ -42,7 +46,7 @@ def setDevice(device):
     currentDevice = str(device)
 
 def serialOpen():
-    ser.port = currentDevice
+    ser.port = str(currentDevice)
     ser.baudrate = 9600
     ser.open()
 
@@ -69,6 +73,10 @@ def beeptest():
         print("Beep!")
         ser.close()
 
+def passChange(key=None):
+    global currentNFCKey
+    currentNFCKey = None #put code to manage key data
+
 def cardCheck():
     ser.write(NFCProt["card-check"])
     check = ser.read(3)
@@ -92,7 +100,7 @@ def anticollision():
 def manufacture():
     serialOpen()
     cardCheck()
-    ser.write(b'\x03\x0A\x00\x0D')
+    ser.write(NFCProt["starter"])
     ser.read(8)
     time.sleep(0.25)
     ser.write(NFCProt["manufacture-data"])
@@ -106,37 +114,37 @@ def manufacture():
 
 def readsector(sector=None,block=None):
     #Sector and Block Pick
-    sectorChoose = CardSectors.sec[sector]
-    blockChoose = CardSectors.secblock[sector]
-    blockIDEnding = CardSectors.secreadend
-    blockIDMid = CardSectors.secreadstart
+    sectorChoose =  CardSectorData.sec[sector]
+    blockChoose = CardSectorData.secblock[sector]
+    blockIDEnding = CardSectorData.secreadend
+    blockIDMid = CardSectorData.secreadstart
     byteread = bytearray()
-    bytereadend1 = bytearray([0x0A,0x05])
-    bytereadend2 = bytearray([0x03,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF])
-    bytereadend = bytearray()
+    bytekeygen1 = bytearray([0x0A,0x05])
+    bytekeygen2 = bytearray([0x03,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF])
+    bytekeygen = bytearray()
     
     #byteread
     byteread.extend('\x03\x06'.encode('utf-8'))
     byteread.extend(sectorChoose[block].encode('utf-8'))
     byteread.extend(blockChoose[block].encode('utf-8'))
     
-    #bytereadend1
-    bytereadend1.extend(blockIDMid[sector].encode('utf-8'))
+    #bytekeygen1
+    bytekeygen1.extend(blockIDMid[sector].encode('utf-8'))
     
-    #bytereadend2
-    bytereadend2.extend(blockIDEnding[sector].encode('utf-8'))
+    #bytekeygen2
+    bytekeygen2.extend(blockIDEnding[sector].encode('utf-8'))
 
-    #bytereadend
-    bytereadend.extend(bytereadend1)
-    bytereadend.extend(bytereadend2)
+    #bytekeygen
+    bytekeygen.extend(bytekeygen1)
+    bytekeygen.extend(bytekeygen2)
 
     #Beginning of card read
     serialOpen()
     cardCheck()
-    ser.write(b'\x03\x0A\x00\x0D')
+    ser.write(NFCProt["starter"])
     ser.read(8)
     time.sleep(0.25)
-    ser.write(bytereadend)
+    ser.write(bytekeygen)
     ser.read(3)
     time.sleep(0.25)
     ser.write(byteread)
@@ -147,8 +155,42 @@ def readsector(sector=None,block=None):
 
 #DONT USE THIS COMMAND IT IS NOT FUNCTIONAL
 def writesector(sector=None,block=None,hexinput=None):
-    pass
-    #Rewrite this function to work properly. Use readsector() as a base
+    resp = None
+    
+    #Sector and Block Pick
+    blockIDEnding = CardSectorData.secreadend
+    blockIDMid = CardSectorData.secreadstart
+    bytekeygen1 = bytearray([0x0A,0x05])
+    bytekeygen2 = bytearray([0x03,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF])
+    bytekeygen = bytearray()
+
+    #bytekeygen1
+    bytekeygen1.extend(blockIDMid[sector].encode('utf-8'))
+    
+    #bytekeygen2
+    bytekeygen2.extend(blockIDEnding[sector].encode('utf-8'))
+
+    #bytekeygen
+    bytekeygen.extend(bytekeygen1)
+    bytekeygen.extend(bytekeygen2)
+
+    serialOpen()
+    cardCheck()
+    ser.write(NFCProt["starter"])
+    resp = ser.read(8)
+    print(resp)
+    time.sleep(0.25)
+    ser.write(bytekeygen)
+    resp = ser.read(3)
+    print(resp)
+    time.sleep(0.25)
+    #Create code to change location of write and content of write
+    #Re-analyze protocol via ASPMon to find out how to write different text
+    ser.write(b'\x13\x07\x01\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x09\xB4')
+    resp = ser.read(3)
+    print(resp)
+    beep()
+    ser.close()
 
 #Console CMD Runner
 startCode()
@@ -158,11 +200,14 @@ while True:
         device = input("Device Name:")
         setDevice(device)
     elif command == "devicename":
-        print(currentDevice)
+        print("Using device: %s" % currentDevice)
     elif command == "beeptoggle":
         beepControl()
     elif command == "beep":
         beeptest()
+    elif command == "keychange":
+        key = input("New Key:")
+        passChange(key)
     elif command == "anticollision":
         anticollision()
     elif command == "manufacture":
@@ -175,8 +220,7 @@ while True:
         #sect = input("Sector:")
         #block = input("Block:")
         #hexin = input("Hex:")
-        #writesector(int(sect),int(block),str(hexin))
-        print("Sorry, but this is unavailable currently!")
+        writesector(0,1) #int(sect),int(block),str(hexin)
     elif command == "exit":
         print("Exiting...")
         break
