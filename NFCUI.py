@@ -2,18 +2,12 @@
 import tkinter as tk
 from tkinter import messagebox
 import pygubu
-import NFC
+#import NFC
 import CardSectorData
 
 # Define the function callbacks
-def on_button1_click():
-    messagebox.showinfo('Message', 'You clicked Button 1')
-
-def on_button2_click():
-    messagebox.showinfo('Message', 'You clicked Button 2')
-
-def on_button3_click():
-    messagebox.showinfo('Message', 'You clicked Button 3')
+def HexRead():
+    messagebox.showinfo('Hex Read', 'You clicked Button 1')
 
 #Application Class
 class Application:
@@ -30,9 +24,7 @@ class Application:
 
         #Configure Callbacks
         callbacks = {
-            'on_button1_clicked': on_button1_click,
-            'on_button2_clicked': on_button2_click,
-            'on_button3_clicked': on_button3_click
+            'HexBtnRead': HexRead
         }
 
         builder.connect_callbacks(callbacks)
@@ -40,5 +32,6 @@ class Application:
 #UI run loop
 if __name__ == '__main__':
     root = tk.Tk()
+    root.title("NFCPy Read/Write")
     app = Application(root)
     root.mainloop()

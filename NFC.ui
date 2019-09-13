@@ -2,6 +2,7 @@
 <interface>
   <object class="ttk.Frame" id="Body">
     <property name="height">200</property>
+    <property name="takefocus">false</property>
     <property name="width">200</property>
     <layout>
       <property name="column">0</property>
@@ -24,7 +25,10 @@
     </child>
     <child>
       <object class="ttk.Button" id="ButtonRead">
+        <property name="command">HexBtnRead</property>
+        <property name="state">normal</property>
         <property name="text" translatable="yes">Read</property>
+        <bind add="" handler="callback" sequence="&lt;1&gt;" />
         <layout>
           <property name="column">0</property>
           <property name="padx">10</property>
