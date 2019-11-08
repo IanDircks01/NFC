@@ -23,6 +23,7 @@ currentDevice = None
 connectedDevices = []
 currentNFCKey = b'\xFF\xFF\xFF\xFF\xFF\xFF'
 beepEnabled = 1
+data = None
 
 def startCode():
     print("WARNING: Not all data shown in console is accurate due to python and pyserial automatically converting some hex data")
@@ -75,7 +76,7 @@ def beeptest():
 
 def passChange(key=None):
     global currentNFCKey
-    currentNFCKey = ''.join(key) #put code to manage key data
+    currentNFCKey = None #put code to manage key data
 
 def cardCheck():
     ser.write(NFCProt["card-check"])
@@ -98,6 +99,7 @@ def anticollision():
     ser.close()
 
 def manufacture():
+    global data
     serialOpen()
     cardCheck()
     ser.write(NFCProt["starter"])
@@ -108,6 +110,7 @@ def manufacture():
     time.sleep(0.25)
     ser.write(b'\x03\x06\x00\x09')
     resp = ser.read(19)
+    data = resp
     print(resp[3:])
     beep()
     ser.close()
@@ -152,6 +155,7 @@ def readsector(sector=None,block=None):
     print(resp[3:])
     beep()
     ser.close()
+    return resp[3:]
 
 #DONT USE THIS COMMAND IT IS NOT FUNCTIONAL
 def writesector(sector=None,block=None,hexinput=None):
@@ -194,36 +198,3 @@ def writesector(sector=None,block=None,hexinput=None):
 
 #Console CMD Runner
 startCode()
-while True:
-    command = input("Command:")
-    if command == "setdevice":
-        device = input("Device Name:")
-        setDevice(device)
-    elif command == "devicename":
-        print("Using device: %s" % currentDevice)
-    elif command == "beeptoggle":
-        beepControl()
-    elif command == "beep":
-        beeptest()
-    elif command == "keychange":
-        key = input("New Key:")
-        passChange(key)
-        print("New key set to: %s" % currentNFCKey)
-    elif command == "anticollision":
-        anticollision()
-    elif command == "manufacture":
-        manufacture()
-    elif command == "sectorread":
-        sect = input("Sector:")
-        block = input("Block:")
-        readsector(int(sect),int(block))
-    elif command == "sectorwrite":
-        #sect = input("Sector:")
-        #block = input("Block:")
-        #hexin = input("Hex:")
-        writesector(0,1) #int(sect),int(block),str(hexin)
-    elif command == "exit":
-        print("Exiting...")
-        break
-    else:
-        print("Command error! Invalid command!")
