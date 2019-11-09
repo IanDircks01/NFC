@@ -1,4 +1,4 @@
-#Sector Hex
+#Sector Hex (FOR READ AND WRITE)
 sec0 = ['\x00','\x01','\x02','\x03']
 sec1 = ['\x04','\x05','\x06','\x07']
 sec2 = ['\x08','\x09','\x0A','\x0B']
@@ -18,26 +18,46 @@ sec15 = ['\x3C','\x3D','\x3E','\x3F']
 
 sec = [sec0,sec1,sec2,sec3,sec4,sec5,sec6,sec7,sec8,sec9,sec10,sec11,sec12,sec13,sec14,sec15]
 
-#Block Hex
-secblock0 = ['\x09','\x0A','\x0B','\x0C']
-secblock1 = ['\x0D','\x0E','\x0F','\x10']
-secblock2 = ['\x11','\x12','\x13','\x14']
-secblock3 = ['\x15','\x16','\x17','\x18']
-secblock4 = ['\x19','\x1A','\x1B','\x1C']
-secblock5 = ['\x1D','\x1E','\x1F','\x20']
-secblock6 = ['\x21','\x22','\x23','\x24']
-secblock7 = ['\x25','\x26','\x27','\x28']
-secblock8 = ['\x29','\x2A','\x2B','\x2C']
-secblock9 = ['\x2D','\x2E','\x2F','\x30']
-secblock10 = ['\x31','\x32','\x33','\x34']
-secblock11 = ['\x35','\x36','\x37','\x38']
-secblock12 = ['\x39','\x3A','\x3B','\x3C']
-secblock13 = ['\x3D','\x3E','\x3F','\x40']
-secblock14 = ['\x41','\x42','\x43','\x44']
-secblock15 = ['\x45','\x46','\x47','\x48']
+#Block Hex (READ ONLY)
+secreadblock0 = ['\x09','\x0A','\x0B','\x0C']
+secreadblock1 = ['\x0D','\x0E','\x0F','\x10']
+secreadblock2 = ['\x11','\x12','\x13','\x14']
+secreadblock3 = ['\x15','\x16','\x17','\x18']
+secreadblock4 = ['\x19','\x1A','\x1B','\x1C']
+secreadblock5 = ['\x1D','\x1E','\x1F','\x20']
+secreadblock6 = ['\x21','\x22','\x23','\x24']
+secreadblock7 = ['\x25','\x26','\x27','\x28']
+secreadblock8 = ['\x29','\x2A','\x2B','\x2C']
+secreadblock9 = ['\x2D','\x2E','\x2F','\x30']
+secreadblock10 = ['\x31','\x32','\x33','\x34']
+secreadblock11 = ['\x35','\x36','\x37','\x38']
+secreadblock12 = ['\x39','\x3A','\x3B','\x3C']
+secreadblock13 = ['\x3D','\x3E','\x3F','\x40']
+secreadblock14 = ['\x41','\x42','\x43','\x44']
+secreadblock15 = ['\x45','\x46','\x47','\x48']
 
-secblock = [secblock0,secblock1,secblock2,secblock3,secblock4,secblock5,secblock6,secblock7,secblock8,secblock9,secblock10,secblock11,secblock12,secblock13,secblock14,secblock15]
+secreadblock = [secreadblock0,secreadblock1,secreadblock2,secreadblock3,secreadblock4,secreadblock5,secreadblock6,secreadblock7,secreadblock8,secreadblock9,secreadblock10,secreadblock11,secreadblock12,secreadblock13,secreadblock14,secreadblock15]
 
-#Read data
-secreadstart = ['\x00','\x01','\x02','\x03','\x04','\x05','\x06','\x07','\x08','\x09','\x0A','\x0B','\x0C','\x0D','\x0E','\x0F']
-secreadend = ['\x0C','\x0D','\x0E','\x0F','\x10','\x11','\x12','\x13','\x14','\x15','\x16','\x17','\x18','\x19','\x1A','\x1B']
+#Block Hex (WRITE ONLY)
+secwriteblock0 = []
+secwriteblock1 = []
+secwriteblock2 = []
+secwriteblock3 = []
+secwriteblock4 = []
+secwriteblock5 = []
+secwriteblock6 = []
+secwriteblock7 = []
+secwriteblock8 = []
+secwriteblock9 = []
+secwriteblock10 = []
+secwriteblock11 = []
+secwriteblock12 = []
+secwriteblock13 = []
+secwriteblock14 = []
+secwriteblock15 = []
+
+secwriteblock = [secwriteblock0,secwriteblock1,secwriteblock2,secwriteblock3,secwriteblock4,secwriteblock5,secwriteblock6,secwriteblock7,secwriteblock8,secwriteblock9,secwriteblock10,secwriteblock11,secwriteblock12,secwriteblock13,secwriteblock14,secwriteblock15]
+
+#Key data
+seckeystart = ['\x00','\x01','\x02','\x03','\x04','\x05','\x06','\x07','\x08','\x09','\x0A','\x0B','\x0C','\x0D','\x0E','\x0F']
+seckeyend = ['\x0C','\x0D','\x0E','\x0F','\x10','\x11','\x12','\x13','\x14','\x15','\x16','\x17','\x18','\x19','\x1A','\x1B']

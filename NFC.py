@@ -115,9 +115,9 @@ def manufacture():
 def readsector(sector=None,block=None):
     #Sector and Block Pick
     sectorChoose =  CardSectorData.sec[sector]
-    blockChoose = CardSectorData.secblock[sector]
-    blockIDEnding = CardSectorData.secreadend
-    blockIDMid = CardSectorData.secreadstart
+    blockChoose = CardSectorData.secreadblock[sector]
+    blockIDEnding = CardSectorData.seckeyend
+    blockIDMid = CardSectorData.seckeystart
     byteread = bytearray()
     bytekeygen1 = bytearray([0x0A,0x05])
     bytekeygen2 = bytearray([0x03,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF])
@@ -158,8 +158,8 @@ def writesector(sector=None,block=None,hexinput=None):
     resp = None
     
     #Sector and Block Pick
-    blockIDEnding = CardSectorData.secreadend
-    blockIDMid = CardSectorData.secreadstart
+    blockIDEnding = CardSectorData.seckeyend
+    blockIDMid = CardSectorData.seckeystart
     bytekeygen1 = bytearray([0x0A,0x05])
     bytekeygen2 = bytearray([0x03,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF])
     bytekeygen = bytearray()
