@@ -157,38 +157,15 @@ def readsector(sector=None,block=None):
 def writesector(sector=None,block=None,hexinput=None):
     resp = None
     
-    #Sector and Block Pick
-    blockIDEnding = CardSectorData.seckeyend
-    blockIDMid = CardSectorData.seckeystart
-    bytekeygen1 = bytearray([0x0A,0x05])
-    bytekeygen2 = bytearray([0x03,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF])
-    bytekeygen = bytearray()
-
-    #bytekeygen1
-    bytekeygen1.extend(blockIDMid[sector].encode('utf-8'))
-    
-    #bytekeygen2
-    bytekeygen2.extend(blockIDEnding[sector].encode('utf-8'))
-
-    #bytekeygen
-    bytekeygen.extend(bytekeygen1)
-    bytekeygen.extend(bytekeygen2)
+    #WRITE PROCESS IS DECODED, BEGIN WRITING VARIABLES
 
     serialOpen()
     cardCheck()
     ser.write(NFCProt["starter"])
-    resp = ser.read(8)
-    print(resp)
     time.sleep(0.25)
-    ser.write(bytekeygen)
-    resp = ser.read(3)
-    print(resp)
+    ser.write(b'\x0A\x05\x00\x03\xFF\xFF\xFF\xFF\xFF\xFF\x0C') #same as reading data
     time.sleep(0.25)
-    #Create code to change location of write and content of write
-    #Re-analyze protocol via ASPMon to find out how to write different text
-    ser.write(b'\x13\x07\x01\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x09\xB4')
-    resp = ser.read(3)
-    print(resp)
+    ser.write(b'\x13\x07\x02\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x09\xB5') #byte 3 and last byte
     beep()
     ser.close()
 
@@ -221,7 +198,7 @@ while True:
         #sect = input("Sector:")
         #block = input("Block:")
         #hexin = input("Hex:")
-        writesector(0,1) #int(sect),int(block),str(hexin)
+        writesector() #int(sect),int(block),str(hexin)
     elif command == "exit":
         print("Exiting...")
         break
