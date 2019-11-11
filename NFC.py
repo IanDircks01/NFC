@@ -155,17 +155,45 @@ def readsector(sector=None,block=None):
 
 #DONT USE THIS COMMAND IT IS NOT FUNCTIONAL
 def writesector(sector=None,block=None,hexinput=None):
-    resp = None
+    #Sector and Block Pick
+    sectorChoose =  CardSectorData.sec[sector]
+    blockChoose = CardSectorData.secwriteblock[sector]
+    blockIDEnding = CardSectorData.seckeyend
+    blockIDMid = CardSectorData.seckeystart
+    bytewrite = bytearray()
+    bytekeygen1 = bytearray([0x0A,0x05])
+    bytekeygen2 = bytearray([0x03,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF])
+    bytekeygen = bytearray()
     
+    #bytewrite INVESTIGATE ISSUE OF SENDING \xC2 for no reason (possibly needs rewrite)
+    bytewrite.extend('\x13\x07'.encode('utf-8'))
+    bytewrite.extend(sectorChoose[block].encode('utf-8'))
+    bytewrite.extend('\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x09'.encode('utf-8'))
+    bytewrite.extend(blockChoose[block].encode('utf-8'))
+    
+    #bytekeygen1
+    bytekeygen1.extend(blockIDMid[sector].encode('utf-8'))
+    
+    #bytekeygen2
+    bytekeygen2.extend(blockIDEnding[sector].encode('utf-8'))
+
+    #bytekeygen
+    bytekeygen.extend(bytekeygen1)
+    bytekeygen.extend(bytekeygen2)
+
+
     #WRITE PROCESS IS DECODED, BEGIN WRITING VARIABLES
 
     serialOpen()
     cardCheck()
     ser.write(NFCProt["starter"])
+    #ser.read(8)
     time.sleep(0.25)
-    ser.write(b'\x0A\x05\x00\x03\xFF\xFF\xFF\xFF\xFF\xFF\x0C') #same as reading data
+    ser.write(bytekeygen)
     time.sleep(0.25)
-    ser.write(b'\x13\x07\x02\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x09\xB5') #byte 3 and last byte
+    ser.write(bytewrite)
+    #ser.write(b'\x13\x07\x02\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x09\xB5') #byte 3 and last byte
+    print(bytewrite)
     beep()
     ser.close()
 
@@ -195,10 +223,10 @@ while True:
         block = input("Block:")
         readsector(int(sect),int(block))
     elif command == "sectorwrite":
-        #sect = input("Sector:")
-        #block = input("Block:")
+        sect = input("Sector:")
+        block = input("Block:")
         #hexin = input("Hex:")
-        writesector() #int(sect),int(block),str(hexin)
+        writesector(int(sect),int(block),None)
     elif command == "exit":
         print("Exiting...")
         break
