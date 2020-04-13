@@ -1,3 +1,7 @@
+# THIS PROJECT HAS MOVED
+This project has moved to https://github.com/Cm0nsters/MiPy-Classic
+
+
 # NFC
 
 *This project is for the M302 Mifare Classic R/W pad*
